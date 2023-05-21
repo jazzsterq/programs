@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.params=A\ B
+comment0.target=void\ solve(double[][],\ double[])
+comment1.params=A\ B
+comment1.target=void\ printRowEchelonForm(double[][],\ double[])
+comment1.text=function\ to\ print\ in\ row\ \ \ \ echleon\ form
+comment2.params=sol
+comment2.target=void\ printSolution(double[])
+comment2.text=function\ to\ print\ solution
+comment3.params=args
+comment3.target=void\ main(java.lang.String[])
+comment3.text=Main\ function
+numComments=4

@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=a\ b\ c\ d
+comment0.target=Wages(java.lang.String,\ double,\ int,\ double)
+comment1.params=
+comment1.target=double\ overtime()
+comment2.params=
+comment2.target=void\ display()
+numComments=3

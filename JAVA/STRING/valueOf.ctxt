@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=void\ STRING_TO_NUMERICTYPE()
+comment1.params=
+comment1.target=void\ NUMERICTYPE_TO_STRING()
+comment2.params=
+comment2.target=void\ CHAR_TO_STRING()
+numComments=3
