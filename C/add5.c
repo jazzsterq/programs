@@ -2,20 +2,11 @@
 int addR(int sum);
 void main()
 {
-    int a;
-    printf("ENter the range");
-    scanf("%d",&a);
-    int m = addR(a);
-   printf("%d",m);
-}
-int addR(int n){
-   
-    if(n==0)
-    return 0;
-    /*
-    int sum=0;
-    sum= n+ addR(n-1);
-    return sum; */
-    return n+addR(n-1);
+    int a[]={0,1,2,3,4,5,6,7,80,90,100,110,120};
+    int i=10;
+    a[i]=i++;
+   printf("%d  %d  ",a[10],a[11]);
 
 }
+
+
