@@ -2,7 +2,7 @@
 #include <chrono>
 #include <map>
 #include<iostream>
-#include<vector>
+//#include<vector>
 using namespace std;
 #pragma GCC optimize("O3")
 #pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
@@ -23,7 +23,7 @@ typedef long long ll;
 #define fi first
 #define se second
 #define deb(x) cout << #x << "=" << x << endl
-#define vll vector<ll>
+#define vll vector<ll> 
 #define vp vector<pair<long long, long long> >
 #define trav(v) for (auto it = v.begin(); it != v.end(); it++)
 #define rep(i, n) for (ll i = 0; i < n; i++)

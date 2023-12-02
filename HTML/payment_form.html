@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .general{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+</head>
+<body class="general">
+    <form action="">
+        <h1>Payment Form</h1>
+        <h2>Contact Information</h2>
+        <p><pre>Name    :  <input type="text"  name="name" required></pre></p>
+        <p><pre>Branch :   <input type="text" name="branch"></pre></p>
+        <p><pre>College :  <input type="text" name="college"></pre></p>
+        <p><pre>Address :  <input type="text" name="address"></pre></p>
+        <fieldset>
+            <legend>GENDER</legend>
+            <p>
+                <input type="radio" name="gender">Male</input>
+                <br><input type="radio" name="gender">Female</input>
+             
+            </p>
+        </fieldset>
+        <p>Card Type:
+            <select name="Card Type" id="">
+                <option value="">-Choose your card-</option>
+                <option value="Visa">Visa</option>
+                <option value="Rupay">Rupay</option>
+            </select>
+        </p>
+        <input type="submit" value="Pay Now" id="">
+    </form>
+</body>
+</html>
