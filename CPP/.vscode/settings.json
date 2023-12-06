@@ -41,5 +41,6 @@
         "valarray": "cpp",
         "bitset": "cpp",
         "numbers": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }
