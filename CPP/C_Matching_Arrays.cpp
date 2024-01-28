@@ -26,46 +26,45 @@ typedef long long ll;
 void solve()
 {
     ll n,x;cin>>n>>x;
-    vp a(n);vll b(n);
-    ll f[n];
+    ll count=0;
+    vp a(n);
+    vll b(n),ans(n);
     rep(i,n)
     {
         cin>>a[i].first;
         a[i].second=i;
     }
     rep(i,n)
-    cin>>b[i];
-    sort(all(b));
+    {
+        cin>>b[i];
+    }
     sort(all(a));
-    ll i=-1;
-    rep(ans,n)
+    sort(all(b));
+    ll j=0;
+    for(;j<n-x;j++)
     {
-        if(a[ans]>b[0])
-        {i=ans;break;}
-    }ll count=0;
-    if(i==-1)
-    for(;i<n&&count<x;i++,count++)
-    {
-        if(a[i].first>b[count])
-        f[a[i].second]=b[count];
-        else
-        {
-            cout<<"NO";ce;return;
-        }
-    }
-    rep(i,n-x)
-    {
-        if(a[i].first>b[i+x])
-        {
-             cout<<"NO";ce;return;
-        }
-        else
-        f[a[i].second]=b[i+x];
-    }
-        cout<<"YES";ce;
-        rep(i,n)
-        cout<<f[i]<<" ";ce;
+       ans[a[j].se]=b[x+j];
+       //cout<<b[x+j]<<" ";
+       if(a[j].fi>b[x+j])
+       count++;
+    }//ce;
 
+    rep(i,x)
+    { 
+        ans[a[j].se]=b[i];
+        //cout<<b[i]<<" ";
+        if(a[j].fi>b[i])
+        count++;
+        j++;
+    }//ce;
+    //cout<<count;ce;
+    if(count!=x)
+    {
+        cout<<"NO";ce;return;
+    }
+    cout<<"YES";ce;
+    rep(i,n)
+    cout<<(ans[i])<<" ";ce;
     return;
 }
 
@@ -81,3 +80,34 @@ int t;
 
 return 0 ;
 }
+/*
+ll i=-1;
+    // rep(ans,n)
+    // {
+    //     if(a[ans].fi > b[0])
+    //     {i=ans;break;}
+    // }ll count=0;
+    // if(i==-1)
+    // for(;i<n&&count<x;i++,count++)
+    // {
+    //     if(a[i].first>b[count])
+    //     f[a[i].second]=b[count];
+    //     else
+    //     {
+    //         cout<<"NO";ce;return;
+    //     }
+    // }
+    // rep(i,n-x)
+    // {
+    //     if(a[i].first>b[i+x])
+    //     {
+    //          cout<<"NO";ce;return;
+    //     }
+    //     else
+    //     f[a[i].second]=b[i+x];
+    // }
+    //     cout<<"YES";ce;
+    //     rep(i,n)
+    //     cout<<f[i]<<" ";ce;
+
+*/

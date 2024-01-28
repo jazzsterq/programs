@@ -25,52 +25,42 @@ typedef long long ll;
 
 void solve()
 {
-    ll n;cin>>n;
+    ll n;
+    cin>>n;
+    vp ans;
     vll v(n);
-    rep(i,n)cin>>v[i];
-    sort(all(v));
-    ll count1=0,count2=1,ans=0;
-
-    for(int i=0;i<n-1;i++)
+    rep(i,n)
     {
-        if(v[i+1]==v[i])
+        cin>>v[i];
+    }
+    ll count=0;
+    sort(all(v));
+    v.pb(-1);
+    ans.pb(make_pair(0,0));
+    rep(i,n)
+    {
+        count++;
+        
+        if(v[i+1]-v[i]==1)
         {
-            count2++;
+            ans.pb(make_pair(v[i],count));
+            count=0;
         }
-        else if(v[i+1]-v[i]==1)
+        else if(v[i+1]-v[i]!=0)
         {
-            if(count1==0)
-            {
-                count2=1;
-                count1=count2;
-            }
-            if(count2>=count1)
-            {
-                ans+=count1;
-                count2=count2-count1;
-                count1=count2;
-                count2=1;
-            }
-            else
-            {
-
-                ans+=count2;
-                count1=0;count2=1;
-            }
-        }
-        else
-        {
-                if(count1==0)
-                {
-                    count2=1;
-                    count1=count2;
-                }
-                ans+=max(count1,count2);
-                count1=0;count2=1;
+            ans.pb(make_pair(v[i],count));
+            count=0;
+            ans.pb(make_pair((v[i]+1),0));
         }
     }
-    ans+=max(count1,count2);
-    cout<<ans;ce;
+    ll output=0;
+    rep(i,ans.size()-1)
+    {
+        output+=max((ll)0,ans[i+1].se-ans[i].se);
+    }
+    cout<<output<<endl;
+    // rep(i,ans.size())
+    // cout<<ans[i].fi<<" "<<ans[i].se<<endl;
     return;
 }
 

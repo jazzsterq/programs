@@ -30,23 +30,27 @@ typedef long long ll;
 #define forf(i, a, b) for (ll i = a; i < b; i++)
 #define forb(i, s, e) for (ll i = s; i >= e; i--)
 static int i=0;
+void hanoi(int n,int from , int to , int use);
 void solve()
 {
     int n;
     cin >>n;
+    cout<<pow(2,n)-1;ce;
+    hanoi(n,1,3,2);
     return;
 }
 
-void hanoi(int n,int a,int b)
+void hanoi(int n,int from,int to,int use)
 {
     if(n==1)
     {
-        cout<<i;ce;
-        cout<<"1 3";ce;
+        cout<<from<<" "<<to;ce;
         return;
     }
-    hanoi(n-1,);
-    cout<<
+    hanoi(n-1,from,use,to);
+    cout<<from<<" "<<to;ce;
+    hanoi(n-1,use,to,from);
+    
 }
 int main(){
 

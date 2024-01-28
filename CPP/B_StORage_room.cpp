@@ -34,16 +34,33 @@ void solve()
             cin>>a[i][j];
         }
     }
-    for(int i=0;i<n;i++)
+    vll ans(n,(1<<30) - 1);
+    for(ll i=0;i<n;i++)
     {
-        ll ans=a[i][i+1];
-        for(int j=i+1;j<n;j++)
+        for(ll j=0;j<n;j++)
         {
-            ans&=a[i][j];
+            if(i!=j)
+            {   
+                ans[i]&=a[i][j];
+                ans[j]&=a[i][j];
+            }
         }
-        cout<<ans<<" ";
-    }ce;
+    }
 
+    rep(i,n)
+    {
+        rep(j,n)
+        {
+            if(i!=j)
+            if((ans[i]|ans[j])!=a[i][j])
+            {
+                cout<<"NO";ce;return;
+            }
+        }
+    }
+    cout<<"YES";ce;
+    rep(i,n)
+    cout<<(ans[i])<<" ";ce;
     return;
 }
 

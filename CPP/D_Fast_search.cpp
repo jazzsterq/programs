@@ -36,21 +36,20 @@ void solve()
     {
         ll li , ri;double l,r;
         cin>>l>>r;
-        l-=0.5;r+=0.5;
         ll left = -1,right=n;
         while(left+1<right)
         {
-            ll mid=(left+right)/2;
-            if(a[mid]>l)
+            ll mid=left+(right-left)/2;
+            if(a[mid]>=l)
             {
                 right=mid;
-                li=mid;
             }
             else
             {
                 left=mid;
             }
         }
+        li=right;
         left =-1,right=n;
         while(left+1<right)
         {
@@ -60,11 +59,12 @@ void solve()
             {
                 right=mid;
             }
-            else if (a[mid]<r)
+            else if (a[mid]<=r)
             {
-                left=mid;ri=mid;
+                left=mid;
             }
         }
+        ri=left;
         cout<<ri-li+1<<" ";
     }
 
