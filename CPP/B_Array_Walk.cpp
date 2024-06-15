@@ -52,64 +52,40 @@ void solve()
     {
         cin>>a[i];
     }
-    ll sum=a[0]+a[1],leave=0,gain=0,end=k,ptr=1;
-    forf(i,1,k)
-        gain=max(gain,(a[i]+a[i-1]));
-    k--;k--;
-    while(k--)
+    ll dp[n][z+1];
+    memset(dp,0,sizeof(dp));
+    ll sum=0;
+    rep(i,k+1)
     {
-        
-        if(z>0)
+        sum+=a[i];
+        dp[i][0]=sum;
+    }
+    ll ans=0;
+    rep(i,n)
+    {
+        rep(j,z+1)
         {
-        leave=a[end]+a[end-1];
-        if(gain>leave)
+            if(i-1>=0&&(i+2*j)<=k)
+             dp[i][j]=max(dp[i-1][j]+a[i],dp[i][j]);
+            if(i-1>=0&&j+1<=z&&(i-1+2*(j+1))<=k)
+            {
+            dp[i-1][j+1]=max(dp[i-1][j+1],dp[i][j]+a[i-1]);
+            //cout<<i<<" "<<j<<" "<<dp[i-1][j+1];ce;
+            }
+
+        }
+    }
+    rep(j,z+1)
+    {
+        rep(i,n)
         {
-            k--;
-            sum+=gain;
-            end-=2;
-            ptr++;
-            z--;
-            continue;
+        //prints(dp[i][j]);
+        ans=max(ans,dp[i][j]);
         }
-        }
-        ptr++;
-        sum+=a[ptr];
-    }
-    if(z>0)
-    {
-        sum+=max(a[ptr+1],a[ptr-1]);
-    }
-    else
-    {
-        sum+=a[ptr+1];
-    }
-    print(sum);
+    }//ce;
+    print(ans);
     return;
 }
- // while(steps<k-1)
-    // {
-    //     if(z>0)
-    //     {
-    //         leave=a[end]+a[end-1];
-    //         if(gain>leave)
-    //         {
-    //             sum+=gain;
-    //             steps+=2;
-    //             z-=1;
-    //             end=end-2;
-    //             ptr++;
-    //             continue;
-    //         }
-    //     }
-    //     sum+=a[ptr];
-    //     ptr++;
-    //     steps+=1;
-    // }
-    // if(z>0)
-    // sum+=max(a[ptr-2],a[ptr]);
-    // else
-    // sum+=a[ptr];
-    // print(sum);
 int main(){
 
 ios_base::sync_with_stdio(false);

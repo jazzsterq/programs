@@ -39,7 +39,7 @@ ll exp(ll x, ll y , ll p );
 ll gcd(ll a, ll b);
 void sieve_of_eratosthenes( );
 void factorial();
-
+ll dp[1000001];
 void solve()
 {
     ll n,x;
@@ -47,26 +47,18 @@ void solve()
     vll a(n);
     rep(i,n)
     cin>>a[i];
-    ll dp[n+1][x+1];
-    rep(i,n+1)
-    {
-        rep(j,x+1)
-        {
-            dp[i][j]=0;
-        }
-    }
-    dp[0][0]=1;
+    memset(dp,0,sizeof(dp));
+    dp[0]=1;
     forf(i,1,n+1)
     {
         rep(j,x+1)
         {
-            dp[i][j]=dp[i-1][j];
             if(j-a[i-1]>=0)
-            (dp[i][j]+=dp[i][j-a[i-1]])%=MODN;
+            (dp[j]+=dp[j-a[i-1]])%=MODN;
 
         }
     }
-    cout<<dp[n][x];
+    cout<<dp[x];
     return;
 }
 

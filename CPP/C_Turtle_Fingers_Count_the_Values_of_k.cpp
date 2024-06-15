@@ -45,7 +45,31 @@ void build(ll ind,ll low,ll high);
 ll query( ll ind,ll low , ll high , ll l , ll r);
 void solve()
 {
-    
+    ll a,b,l;
+    cin>>a>>b>>l;
+    ll da=a,db=b;
+    ll ca=0,cb=0;
+    set<ll> ans;
+    while(a<=l)
+    {
+        if(l%a!=0)break;
+        ca++;
+        a=a*da;
+    }
+    a=da;
+    rep(i,ca+1)
+    {
+        db=b,cb=0;
+        ans.insert(l/pow(a,i));
+        while(db<=l/pow(a,i))
+        {
+            if((ll)(l/pow(a,i))%db!=0)break;
+            ll k=l/(pow(a,i)*db);
+            ans.insert(k);
+            db=db*b;
+        }
+    }
+    print(ans.size());
     return;
 }
 

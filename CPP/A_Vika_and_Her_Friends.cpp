@@ -45,7 +45,24 @@ void build(ll ind,ll low,ll high);
 ll query( ll ind,ll low , ll high , ll l , ll r);
 void solve()
 {
-    ll n,
+    ll n,m,k;
+    cin>>n>>m>>k;
+    ll vx,vy;
+    cin>>vx>>vy;
+    ll a=(vx+vy)%2;
+    ll flag=0;
+    rep(i,k)
+    {
+        ll xk,yk;
+        cin>>xk>>yk;
+        if((xk+yk)%2==a)
+        {
+            flag=1;
+        }
+    }
+    if(flag==1)
+    print("NO");else
+    print("YES");
     return;
 }
 

@@ -45,33 +45,43 @@ void build(ll ind,ll low,ll high);
 ll query( ll ind,ll low , ll high , ll l , ll r);
 void solve()
 {
-    ll n;
-    cin>>n;
+    ll n,m;
+    cin>>n>>m;
     vll a(n);
     rep(i,n)cin>>a[i];
     string s;
     cin>>s;
-    vll ans(1e4+1);
-    rep(i,n)
-    {
-        ans[a[i]]++;
-    }
-    ll left=0,right=n-1;
-    rep(i,n)
+    ll left=0;
+    rep(i,n-1)
     {
         if(s[i]=='L')
         {
-            ans[a[left]]--;
             left++;
+        }
+    }
+    vll ans(n);
+    ans[n-1]=a[left]%m;
+    ll prod=a[left]%m;
+    ll right=left+1;
+    left=left-1;
+    forb(i,n-2,0)
+    {
+        if(s[i]=='L')
+        {
+            (prod*=a[left]%m)%=m;
+            ans[i]=prod;
+            left--;
         }
         if(s[i]=='R')
         {
-            ans[a[right]]--;
-            right--;
+            (prod*=a[right]%m)%=m;
+            ans[i]=prod;
+            right++;
         }
-        rep()
-    }
 
+    }
+    rep(i,n)prints(ans[i]);
+    ce;
     return;
 }
 

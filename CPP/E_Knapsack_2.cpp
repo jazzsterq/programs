@@ -39,41 +39,38 @@ ll exp(ll x, ll y , ll p );
 ll gcd(ll a, ll b);
 void sieve_of_eratosthenes( );
 void factorial();
-ll jz[100001][101];
+
 void solve()
 {
-    ll n,wt;
-    cin>>n>>wt;
+    ll n,we;
+    cin>>n>>we;
     vll w(n),v(n);
-    rep(i,n)cin>>w[i]>>v[i];
-    memset(jz,-1,sizeof(jz));
-    rep(i,n+1)jz[0][i]=0;
+    ll sum=0;
     rep(i,n)
     {
-        rep(j,100001)
-        {
-            jz[j][i+1]=jz[j][i];
-            if(jz[j-v[i]][i]!=-1&&j-v[i]>=0)
-            {
-                if(jz[j-v[i]][i]+w[i]<=wt)
-                {
-                    jz[j][i+1]=jz[j-v[i]][i]+w[i];
-                }
-            }
-        }
+        cin>>w[i]>>v[i];
+        sum+=v[i];
     }
-    ll ans=0;
-    rep(i,100001)
+    vll dp(sum+1,MODN);
+    dp[0]=0;
+    rep(i,n)
     {
-        rep(j,n+1)
+        forb(j,sum,0)
         {
-            if(jz[i][j]>0)
-            ans=i;
+            if(j-v[i]>=0)
+            dp[j]=min(dp[j],dp[j-v[i]]+w[i]);
         }
     }
-    cout<<ans;ce;
+    forb(j,sum,0)
+    {
+        if(dp[j]<=we)
+        {
+            print(j);return;
+        }
+    }
     return;
 }
+
 int main(){
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);

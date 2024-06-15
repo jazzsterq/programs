@@ -1,0 +1,1 @@
+{"name":"Local: wordladder2","url":"/Users/user/Desktop/Programs/CPP/wordladder2.cpp","tests":[{"id":1718105462085,"input":"5\n4\nbaa\nabcd\nabca\ncab\ncad","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/user/Desktop/Programs/CPP/wordladder2.cpp","group":"local","local":true}

@@ -39,10 +39,18 @@ ll exp(ll x, ll y , ll p );
 ll gcd(ll a, ll b);
 void sieve_of_eratosthenes( );
 void factorial();
-
+vll countt(10);
 void solve()
 {
-    
+    ll n;
+    cin>>n;ll ans=1;
+    while(n>0)
+    {
+        ll dig=n%10;
+        ans*=countt[dig];
+        n=n/10;
+    }
+    print(ans);
     return;
 }
 
@@ -50,6 +58,22 @@ int main(){
 
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);
+rep(p,10)
+{
+    ll temp=0;
+    rep(i,p+1)
+        {
+            rep(j,p+1)
+            {
+                rep(k,p+1)
+                {
+                    if(i+j+k==p)
+                    temp++;
+                }
+            }
+        }
+        countt[p]=temp;
+}
 int t;
     cin >> t;
     while(t--){

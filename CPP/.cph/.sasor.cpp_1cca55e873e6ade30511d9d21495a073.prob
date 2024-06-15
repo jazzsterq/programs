@@ -1,0 +1,1 @@
+{"name":"Local: sasor","url":"/Users/user/Desktop/Programs/CPP/sasor.cpp","tests":[{"id":1715784163750,"input":"3\n3 3\n111\n101\n111\n3 4\n1110\n1000\n1111\n5 5\n11111\n10101\n11011\n10101\n11111","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/user/Desktop/Programs/CPP/sasor.cpp","group":"local","local":true}

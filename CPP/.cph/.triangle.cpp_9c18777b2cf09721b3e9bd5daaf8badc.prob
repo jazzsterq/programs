@@ -1,0 +1,1 @@
+{"name":"Local: triangle","url":"/Users/user/Desktop/Programs/CPP/triangle.cpp","tests":[{"id":1717558073753,"input":"4 2 3 4 6 5 7 4 1 8 3","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/user/Desktop/Programs/CPP/triangle.cpp","group":"local","local":true}

@@ -1,18 +1,19 @@
+/**
+* author : jazzsterq
+*/
 #include <bits/stdc++.h>
-#include <chrono>
-#include <map>
-#include<iostream>
-#include<vector>
 using namespace std;
-#pragma GCC optimize("O3")
-#pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
- 
 typedef long long ll;
 #define be begin()
 #define en end()
 #define pb push_back
-#define pyes cout << "Yes\n"
-#define pno cout << "No\n"
+#define mp make_pair
+#define fi first
+#define se second
+#define pyes cout << "YES\n"
+#define pno cout << "NO\n"
+#define print(x) cout<<x<<endl
+#define prints(x) cout<<x<<" "
 #define ce cout << '\n'
 #define endl '\n'
 #define rev(v) reverse(v.begin(), v.end())
@@ -20,57 +21,73 @@ typedef long long ll;
 #define all(v) v.begin(), v.end()
 #define mnv(v) *min_element(v.begin(), v.end())
 #define mxv(v) *max_element(v.begin(), v.end())
-#define fi first
-#define se second
 #define deb(x) cout << #x << "=" << x << endl
 #define vll vector<ll>
 #define vp vector<pair<long long, long long> >
 #define trav(v) for (auto it = v.begin(); it != v.end(); it++)
 #define rep(i, n) for (ll i = 0; i < n; i++)
 #define forf(i, a, b) for (ll i = a; i < b; i++)
-#define yess cout<<"Case #"<<p<<": YES"<<endl
-#define noo cout<<"Case #"<<p<<": NO"<<endl
 #define forb(i, s, e) for (ll i = s; i >= e; i--)
 
+const ll MAXN=100001;
+const ll MODN= 1e9 + 7;
+bool is_prime[MAXN+1];
+ll fact[MAXN+1];
+ll arr[200005];
+ll spf[MAXN];
+ll seg[4*200005];
+void sieve();
+ll exp(ll x, ll y , ll p );
+ll gcd(ll a, ll b);
+void sieve_of_eratosthenes( );
+void factorial();
+void build(ll ind,ll low,ll high);
+ll query( ll ind,ll low , ll high , ll l , ll r);
 void solve()
 {
-    string s;
-    cin >>s;
-    ll pos ;
-    cin >> pos;
+
+    string s,dup;
+    cin>>s;
+    ll pos;
+    cin>>pos;
     ll n=s.length();
-    vector<pair<char,ll> > v(n);
+    ll sum=0,todel=n-1;
     rep(i,n)
     {
-        v[i].first=s[i];
-        v[i].second=i;
-    }
-    sort(v.rbegin(),v.rend());
-    int i=0;
-    if(pos<=n)
-    {
-        cout<<s[pos-1]; return;
-    }
-    pos=pos-n;n--;
-    while(1)
-    {
-        if(pos<=n)
-        {   ll m=0;
-            for(int k=0;k<i;k++)
-            {
-                if(pos-1>=v[k].second)
-                m++;
-            }
-            if(pos-1<v[i].second)
-            cout<<s[pos-1+m];
-            else
-            cout<<s[pos+m];
-            return;
-        }i++;
-        pos=pos-n;
-        n--;
-    }
 
+        sum+=n-i;
+        if(pos<=sum)
+        {
+            todel=i;
+            pos=pos-sum+n-i;
+            break;
+        }
+    }
+    if(todel==n-1)pos=1;
+    vector<char> v;
+    ll count=0,poss=n-1;
+    forf(i,0,n)
+    {
+        //rep(i,v.size())cout<<v[i];ce;
+        if(count>=todel){poss=i;break;
+            break;
+        }
+        if(v.size()==0){v.pb(s[i]);continue;}
+        while(v.back()>s[i])
+        {
+            if(count>=todel){
+                poss=i;break;}
+            v.pop_back();
+            count++;
+            
+        }    
+        v.pb(s[i]);
+
+    }
+    
+    forf(i,poss,n)v.pb(s[i]);
+   
+    cout<<v[pos-1];
     return;
 }
 
@@ -78,11 +95,113 @@ int main(){
 
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);
-int t;
+ll t;
     cin >> t;
     while(t--){
         solve();
     }
 
 return 0 ;
+}
+
+void build(ll ind,ll low,ll high)
+{
+    if(low==high)
+    {
+        seg[ind]=arr[low];
+        return;
+    }
+    ll mid = (low +high)/2;
+    build(2*ind+1,low,mid);
+    build(2*ind+2,mid+1,high);
+    seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+}
+ll query(ll ind,ll low , ll high , ll l , ll r)
+{
+    if(low>=l&&high<=r)
+    {
+        return seg[ind];
+    }
+    if(high<l||low>r)
+    {
+        return 0;
+    }
+    ll mid = (low + high)/2;
+    ll left= query(2*ind+1,low,mid,l,r);
+    ll right= query(2*ind+2,mid+1,high,l,r);
+    return(left+right);
+
+}
+
+ll gcd(ll a, ll b) {if (!a || !b)return a | b;
+unsigned shift = __builtin_ctz(a | b);
+a >>= __builtin_ctz(a);
+do {
+b >>= __builtin_ctz(b);
+if (a > b)
+swap(a, b);
+b -= a;
+} while (b);
+return a << shift;
+}
+
+void factorial(){
+    fact[0]=1;
+    for(ll i=1;i<MAXN+1;i++){
+        fact[i]=(fact[i-1]*i)%MODN;
+    }
+}
+
+ll exp(ll a, ll b , ll p)
+{
+    ll res = 1;
+    while (b > 0)
+    {
+        if (b & 1)
+            res = (res%p * a%p)%p ;
+        a = ((a%p) * (a%p))%p;
+        b >>= 1;
+    }
+    return res%p;
+}
+
+void sieve_of_eratosthenes(){
+    memset(is_prime,true,sizeof(is_prime));
+    is_prime[0] = is_prime[1] = false;
+    for (ll i = 2; i <= MAXN; i++) {
+            if (is_prime[i] && (long long)i * i <= MAXN) {
+                for (ll j = i * i; j <= MAXN; j += i){
+                        is_prime[j] = false;
+                }
+        }
+    }
+ 
+}
+
+void sieve()
+{
+    spf[1] = 1;
+    for (ll i = 2; i < MAXN; i++)
+ 
+        // marking smallest prime factor for every
+        // number to be itself.
+        spf[i] = i;
+ 
+    // separately marking spf for every even
+    // number as 2
+    for (ll i = 4; i < MAXN; i += 2)
+        spf[i] = 2;
+ 
+    for (ll i = 3; i * i < MAXN; i++) {
+        // checking if i is prime
+        if (spf[i] == i) {
+            // marking SPF for all numbers divisible by i
+            for (ll j = i * i; j < MAXN; j += i)
+ 
+                // marking spf[j] if it is not
+                // previously marked
+                if (spf[j] == j)
+                    spf[j] = i;
+        }
+    }
 }

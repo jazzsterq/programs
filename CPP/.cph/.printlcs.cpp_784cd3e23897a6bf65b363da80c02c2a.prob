@@ -1,0 +1,1 @@
+{"name":"Local: printlcs","url":"/Users/user/Desktop/Programs/CPP/printlcs.cpp","tests":[{"id":1718197194178,"input":"abcde\ncdeabc","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/user/Desktop/Programs/CPP/printlcs.cpp","group":"local","local":true}
