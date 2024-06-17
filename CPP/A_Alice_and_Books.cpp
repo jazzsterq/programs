@@ -29,48 +29,71 @@ typedef long long ll;
 #define forf(i, a, b) for (ll i = a; i < b; i++)
 #define forb(i, s, e) for (ll i = s; i >= e; i--)
 
-const ll MAXN=1000001;
+const ll MAXN=100001;
 const ll MODN= 1e9 + 7;
 bool is_prime[MAXN+1];
 ll fact[MAXN+1];
-int spf[MAXN];
+ll arr[200005];
+ll spf[MAXN];
+ll seg[4*200005];
 void sieve();
 ll exp(ll x, ll y , ll p );
 ll gcd(ll a, ll b);
 void sieve_of_eratosthenes( );
 void factorial();
-vector<int> getPrimes(int n) {
-        vector<bool> prime(n+1,1);
-        prime[0]=0,prime[1]=0;
-        for(int i=2;i<n;i++)
-        {
-            if(prime[i]==1)
-            {
-                for(int j=i*i;j<n;j+=i)
-                prime[j]=0;
-            }
-        }
-        for(int i=2;i<=n/2;i++)
-        {
-            if(prime[i]&&prime[n-i])
-            {
-                return {i,n-i};
-            }
-        }
-        return {-1,-1};
-    }
+void build(ll ind,ll low,ll high);
+ll query( ll ind,ll low , ll high , ll l , ll r);
 void solve()
 {
-    vector<int> ans=getPrimes(98952);
-    prints(ans[0]);prints(ans[1]);
+    ll n;cin>>n;
+    vll a(n-1);rep(i,n-1)cin>>a[i];
+    sort(all(a));
+    ll ans;cin>>ans;
+    ans+=a[n-2];
+    print(ans);
     return;
 }
 
 int main(){
+
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);
-solve();
+ll t;
+    cin >> t;
+    while(t--){
+        solve();
+    }
+
 return 0 ;
+}
+
+void build(ll ind,ll low,ll high)
+{
+    if(low==high)
+    {
+        seg[ind]=arr[low];
+        return;
+    }
+    ll mid = (low +high)/2;
+    build(2*ind+1,low,mid);
+    build(2*ind+2,mid+1,high);
+    seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+}
+ll query(ll ind,ll low , ll high , ll l , ll r)
+{
+    if(low>=l&&high<=r)
+    {
+        return seg[ind];
+    }
+    if(high<l||low>r)
+    {
+        return 0;
+    }
+    ll mid = (low + high)/2;
+    ll left= query(2*ind+1,low,mid,l,r);
+    ll right= query(2*ind+2,mid+1,high,l,r);
+    return(left+right);
+
 }
 
 ll gcd(ll a, ll b) {if (!a || !b)return a | b;
@@ -87,7 +110,7 @@ return a << shift;
 
 void factorial(){
     fact[0]=1;
-    for(int i=1;i<MAXN+1;i++){
+    for(ll i=1;i<MAXN+1;i++){
         fact[i]=(fact[i-1]*i)%MODN;
     }
 }
@@ -108,9 +131,9 @@ ll exp(ll a, ll b , ll p)
 void sieve_of_eratosthenes(){
     memset(is_prime,true,sizeof(is_prime));
     is_prime[0] = is_prime[1] = false;
-    for (int i = 2; i <= MAXN; i++) {
+    for (ll i = 2; i <= MAXN; i++) {
             if (is_prime[i] && (long long)i * i <= MAXN) {
-                for (int j = i * i; j <= MAXN; j += i){
+                for (ll j = i * i; j <= MAXN; j += i){
                         is_prime[j] = false;
                 }
         }
@@ -121,7 +144,7 @@ void sieve_of_eratosthenes(){
 void sieve()
 {
     spf[1] = 1;
-    for (int i = 2; i < MAXN; i++)
+    for (ll i = 2; i < MAXN; i++)
  
         // marking smallest prime factor for every
         // number to be itself.
@@ -129,14 +152,14 @@ void sieve()
  
     // separately marking spf for every even
     // number as 2
-    for (int i = 4; i < MAXN; i += 2)
+    for (ll i = 4; i < MAXN; i += 2)
         spf[i] = 2;
  
-    for (int i = 3; i * i < MAXN; i++) {
+    for (ll i = 3; i * i < MAXN; i++) {
         // checking if i is prime
         if (spf[i] == i) {
             // marking SPF for all numbers divisible by i
-            for (int j = i * i; j < MAXN; j += i)
+            for (ll j = i * i; j < MAXN; j += i)
  
                 // marking spf[j] if it is not
                 // previously marked

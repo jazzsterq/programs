@@ -39,30 +39,37 @@ ll exp(ll x, ll y , ll p );
 ll gcd(ll a, ll b);
 void sieve_of_eratosthenes( );
 void factorial();
-vector<int> getPrimes(int n) {
-        vector<bool> prime(n+1,1);
-        prime[0]=0,prime[1]=0;
-        for(int i=2;i<n;i++)
+int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        vector<int> vis(V);
+        priority_queue<tuple<int,int,int>,vector<tuple<int,int,int>>,greater<>> q;
+        q.push(make_tuple(0,0,-1));//weight,edge,parent
+        vector<vector<pair<int,int>>> adj2(V);
+         for (int i = 0; i < V; ++i) {
+        for (const auto& edge : adj[i]) {
+            adj2[i].push_back(std::make_pair(edge[0], edge[1]));
+            adj2[edge[0]].push_back(std::make_pair(i, edge[1]));
+        }}
+        int ans=0;
+        while(!q.empty())
         {
-            if(prime[i]==1)
+            auto [weight,vertex,parent]=q.top();
+            q.pop();
+            ans+=weight;
+            vis[vertex]=1;
+            for(auto [i,j]:adj2[vertex])
             {
-                for(int j=i*i;j<n;j+=i)
-                prime[j]=0;
+                if(!vis[i])
+                {
+                    q.push(make_tuple(j,i,vertex));
+                }
             }
         }
-        for(int i=2;i<=n/2;i++)
-        {
-            if(prime[i]&&prime[n-i])
-            {
-                return {i,n-i};
-            }
-        }
-        return {-1,-1};
+        return ans;
     }
 void solve()
 {
-    vector<int> ans=getPrimes(98952);
-    prints(ans[0]);prints(ans[1]);
+    
     return;
 }
 

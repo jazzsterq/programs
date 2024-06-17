@@ -39,30 +39,12 @@ ll exp(ll x, ll y , ll p );
 ll gcd(ll a, ll b);
 void sieve_of_eratosthenes( );
 void factorial();
-vector<int> getPrimes(int n) {
-        vector<bool> prime(n+1,1);
-        prime[0]=0,prime[1]=0;
-        for(int i=2;i<n;i++)
-        {
-            if(prime[i]==1)
-            {
-                for(int j=i*i;j<n;j+=i)
-                prime[j]=0;
-            }
-        }
-        for(int i=2;i<=n/2;i++)
-        {
-            if(prime[i]&&prime[n-i])
-            {
-                return {i,n-i};
-            }
-        }
-        return {-1,-1};
-    }
+
 void solve()
 {
-    vector<int> ans=getPrimes(98952);
-    prints(ans[0]);prints(ans[1]);
+    ll n,m;
+    cin>>n>>m;
+    vector<vector<ll> 
     return;
 }
 
