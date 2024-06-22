@@ -44,7 +44,47 @@ void solve()
 {
     ll n,m;
     cin>>n>>m;
-    vector<vector<ll> 
+    vector<vector<ll>> adj(n);
+    vll vis(n,-1),parent(n,-1);
+    rep(i,m)
+    {
+        ll a,b;
+        cin>>a>>b;
+        a--;b--;
+        adj[a].pb(b);
+        adj[b].pb(a);
+    }
+    queue<ll> q;
+    q.push(0);
+    vis[0]=1;
+    while(!q.empty())
+    {
+        ll node=q.front();
+        q.pop();
+        for(auto i:adj[node])
+        {
+            if(vis[i]==-1)
+            {
+                vis[i]=vis[node]+1;
+                parent[i]=node;
+                q.push(i);
+            }
+        }
+    }
+    if(vis[n-1]==-1){
+        print("IMPOSSIBLE");return;
+    }
+    cout<<vis[n-1];ce;
+    ll node=n-1;
+    vll ans;
+    ans.pb(node+1);
+    while(parent[node]!=-1)
+    {
+        ans.pb(parent[node]+1);
+        node=parent[node];
+    }
+    reverse(all(ans));
+    for(auto i:ans)prints(i);
     return;
 }
 

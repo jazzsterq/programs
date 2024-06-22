@@ -1,195 +1,261 @@
-#include <iostream>
-#include <vector>
-#include <unordered_set>
-#include <memory>
-#include <map>
-#include <string>
-
+/**
+* author : jazzsterq
+*/
+#include <bits/stdc++.h>
+#pragma GCC optimize("O3,unroll-loops")
+#pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
 using namespace std;
+typedef long long ll;
+//#include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
+// using namespace __gnu_pbds;
+// typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
+// typedef tree<ll, null_type, less_equal<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_multiset;
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define se second
+#define INF 1000000000000000000
+#define sz(x) static_cast<ll>((x).size())
+#define pyes cout << "YES\n"
+#define pno cout << "NO\n"
+#define print(x) cout<<x<<endl
+#define prints(x) cout<<x<<" "
+#define ce cout << '\n'
+#define endl '\n'
+#define rev(v) reverse(v.begin(), v.end())
+#define srt(v) sort(v.begin(), v.end())
+#define all(v) v.begin(), v.end()
+#define mnv(v) *min_element(v.begin(), v.end())
+#define mxv(v) *max_element(v.begin(), v.end())
+#define deb(x) cout << #x << "=" << x << endl
+#define vll vector<ll>
+#define vp vector<pair<long long, long long> >
+#define pp pair<ll, ll>
+#define trav(v) for (auto it = v.begin(); it != v.end(); it++)
+#define rep(i, n) for (ll i = 0; i < n; i++)
+#define forf(i, a, b) for (ll i = a; i < b; i++)
+#define forb(i, s, e) for (ll i = s; i >= e; i--)
 
-// A class to represent a suffix tree node
-class SuffixTreeNode {
-public:
-    map<char, shared_ptr<SuffixTreeNode>> children;
-    shared_ptr<SuffixTreeNode> suffixLink;
-    int start;
-    shared_ptr<int> end;  // Use shared_ptr for automatic memory management
-    int suffixIndex;
+#ifndef ONLINE_JUDGE
+#include "debug.cpp"
+#define debug(x...)               \
+    cerr << "[" << #x << "] = ["; \
+    _print(x)
+#else
+#define debug(x...)
+#endif
 
-    SuffixTreeNode(int start, shared_ptr<int> end) : start(start), end(end), suffixLink(nullptr), suffixIndex(-1) {}
-};
-
-// A class to represent a suffix tree
-class SuffixTree {
-    string text;
-    shared_ptr<SuffixTreeNode> root;
-    shared_ptr<SuffixTreeNode> lastNewNode, activeNode;
-    int activeEdge, activeLength;
-    int remainingSuffixCount;
-    int leafEnd;
-    shared_ptr<int> rootEnd, splitEnd;
-    int size;
-
-    shared_ptr<SuffixTreeNode> newNode(int start, shared_ptr<int> end) {
-        return make_shared<SuffixTreeNode>(start, end);
+template<typename R>
+void vin(vector<R> &a)
+{
+    for (ll i = 0; i < (ll)a.size(); i++)
+    {
+        cin >> a[i];
     }
-
-    int edgeLength(shared_ptr<SuffixTreeNode> n) {
-        return *(n->end) - n->start + 1;
+}
+ 
+template <typename T>
+void vout(vector<T> a)
+{
+    for (int i = 0; i < (int)a.size(); i++)
+    {
+        cout << a[i] << " ";
     }
-
-    bool walkDown(shared_ptr<SuffixTreeNode> currNode) {
-        if (activeLength >= edgeLength(currNode)) {
-            activeEdge += edgeLength(currNode);
-            activeLength -= edgeLength(currNode);
-            activeNode = currNode;
-            return true;
-        }
-        return false;
-    }
-
-    void extendSuffixTree(int pos) {
-        leafEnd = pos;
-        remainingSuffixCount++;
-        lastNewNode = nullptr;
-
-        while (remainingSuffixCount > 0) {
-            if (activeLength == 0) activeEdge = pos;
-
-            if (activeNode->children.find(text[activeEdge]) == activeNode->children.end()) {
-                activeNode->children[text[activeEdge]] = newNode(pos, make_shared<int>(leafEnd));
-
-                if (lastNewNode != nullptr) {
-                    lastNewNode->suffixLink = activeNode;
-                    lastNewNode = nullptr;
-                }
-            } else {
-                shared_ptr<SuffixTreeNode> next = activeNode->children[text[activeEdge]];
-                if (walkDown(next)) continue;
-
-                if (text[next->start + activeLength] == text[pos]) {
-                    if (lastNewNode != nullptr && activeNode != root) {
-                        lastNewNode->suffixLink = activeNode;
-                        lastNewNode = nullptr;
-                    }
-                    activeLength++;
-                    break;
-                }
-
-                splitEnd = make_shared<int>(next->start + activeLength - 1);
-                shared_ptr<SuffixTreeNode> split = newNode(next->start, splitEnd);
-                activeNode->children[text[activeEdge]] = split;
-
-                split->children[text[pos]] = newNode(pos, make_shared<int>(leafEnd));
-                next->start += activeLength;
-                split->children[text[next->start]] = next;
-
-                if (lastNewNode != nullptr) {
-                    lastNewNode->suffixLink = split;
-                }
-
-                lastNewNode = split;
-            }
-
-            remainingSuffixCount--;
-            if (activeNode == root && activeLength > 0) {
-                activeLength--;
-                activeEdge = pos - remainingSuffixCount + 1;
-            } else if (activeNode != root) {
-                activeNode = activeNode->suffixLink;
-            }
-        }
-    }
-
-    void setSuffixIndexByDFS(shared_ptr<SuffixTreeNode> n, int labelHeight) {
-        if (n == nullptr) return;
-
-        bool leaf = true;
-        for (auto& it : n->children) {
-            leaf = false;
-            setSuffixIndexByDFS(it.second, labelHeight + edgeLength(it.second));
-        }
-        if (leaf) {
-            n->suffixIndex = size - labelHeight;
-        }
-    }
-
-public:
-    SuffixTree(const string& text) : text(text), size(text.size()), rootEnd(make_shared<int>(-1)), root(newNode(-1, rootEnd)), activeNode(root), activeEdge(-1), activeLength(0), remainingSuffixCount(0), leafEnd(-1) {
-        for (int i = 0; i < size; i++) {
-            extendSuffixTree(i);
-        }
-        setSuffixIndexByDFS(root, 0);
-    }
-
-    shared_ptr<SuffixTreeNode> getRoot() const {
-        return root;
-    }
-
-    const string& getText() const {
-        return text;
-    }
-};
-
-// Function to check if the string can be partitioned using `t` and 'a'
-bool isValidPartition(const string& s, const string& t) {
-    int n = s.length();
-    int m = t.length();
-    vector<int> dp(n + 1, 0);
-    dp[0] = 1; // Base case: empty string is always valid
-
-    for (int i = 0; i < n; i++) {
-        if (dp[i]) {
-            if (i + m <= n && s.substr(i, m) == t) {
-                dp[i + m] = 1;
-            }
-            if (s[i] == 'a') {
-                dp[i + 1] = 1;
-            }
-        }
-    }
-
-    return dp[n];
+    ce;
 }
 
-int main() {
-    int num_tests;
-    cin >> num_tests; // Number of test cases
+const ll MAXN=100001;
+const ll MODN= 1e9 + 7;
+bool is_prime[MAXN+1];
+ll fact[MAXN+1];
+ll arr[200005];
+ll spf[MAXN];
+ll seg[4*200005];
+void sieve();
+ll exp(ll x, ll y , ll p );
+ll gcd(ll a, ll b);
+void sieve_of_eratosthenes( );
+void factorial();
+void build(ll ind,ll low,ll high);
+ll query( ll ind,ll low , ll high , ll l , ll r);
+vector<ll> zfunc(string s)
+{
+    ll n=s.length();
+    ll l=0,r=0;
+    vll z(n);
 
-    while (num_tests--) {
-        string s;
-        cin >> s; // Read the string
-
-        int count = 0; // To keep track of valid partitions
-        SuffixTree st(s);
-        shared_ptr<SuffixTreeNode> root = st.getRoot();
-        unordered_set<string> seen;
-        const string& text = st.getText();
-        int n = text.size();
-
-        vector<shared_ptr<SuffixTreeNode>> stack;
-        stack.push_back(root);
-
-        while (!stack.empty()) {
-            shared_ptr<SuffixTreeNode> node = stack.back();
-            stack.pop_back();
-
-            for (auto it : node->children) {
-                stack.push_back(it.second);
-                if (it.second->suffixIndex == -1) continue;
-
-                string t = text.substr(it.second->suffixIndex, n - it.second->suffixIndex);
-                if (t.find_first_not_of('a') != string::npos && seen.find(t) == seen.end()) {
-                    seen.insert(t); // Mark this substring as seen
-                    if (isValidPartition(s, t)) {
-                        count++; // Increment count if it is a valid partition
-                    }
-                }
-            }
+    for(ll i=1;i<n;i++)
+    {
+        if(i<r)
+        z[i]=min(z[i-l],r-i);
+        while((z[i]<n)&&(s[z[i]]==s[i+z[i]]))
+        z[i]++;
+        if(r<i+z[i])
+        {
+            r=i+z[i];
+            l=i;
         }
+    }
+    return z;
+}
+void solve()
+{
+    string s;
+    cin>>s;
+    vll z;
+    ll n=s.length();
+    vll nona(n,n);
+    if(s[n-1]!='a')nona[n-1]=n-1;
+    forb(i,n-2,0)
+    {
+        if(s[i]=='a')
+        {
+            nona[i]=nona[i+1];
+        }
+        else nona[i]=i;
+    }
+    if(nona[0]==n){print(n-1);return;}
+    string t="";
+    forf(i,nona[0],n)t=t+s[i];
+    z=zfunc(t);
+    ll ans=0;
+    ll i1=nona[0];
+    ll mn=nona[0];
+    forf(i,1,n+1-i1)
+    {
+        ll curr=i1+i;
+        bool works=1;
+        mn=nona[0];
+        while(curr<n)
+        {
+            if (nona[curr] == n) break;
+            ll bt = nona[curr] - curr;
+            mn = min(mn, bt);
+            curr += bt;
+            if (z[curr - i1] < i) {
+                works = false;
+                break;
+            }
+            curr += i;
+        }
+        if(works)ans+=mn+1;
+    }
+    print(ans);
+    return;
+}
 
-        cout << count << endl; // Output the result for this test case
+int main(){
+
+ios_base::sync_with_stdio(false);
+cin.tie(NULL); cout.tie(NULL);
+ll t;
+    cin >> t;
+    while(t--){
+        solve();
     }
 
-    return 0;
+return 0 ;
+}
+
+void build(ll ind,ll low,ll high)
+{
+    if(low==high)
+    {
+        seg[ind]=arr[low];
+        return;
+    }
+    ll mid = (low +high)/2;
+    build(2*ind+1,low,mid);
+    build(2*ind+2,mid+1,high);
+    seg[ind]=seg[2*ind+1]+seg[2*ind+2];
+}
+ll query(ll ind,ll low , ll high , ll l , ll r)
+{
+    if(low>=l&&high<=r)
+    {
+        return seg[ind];
+    }
+    if(high<l||low>r)
+    {
+        return 0;
+    }
+    ll mid = (low + high)/2;
+    ll left= query(2*ind+1,low,mid,l,r);
+    ll right= query(2*ind+2,mid+1,high,l,r);
+    return(left+right);
+
+}
+
+ll gcd(ll a, ll b) {if (!a || !b)return a | b;
+unsigned shift = __builtin_ctz(a | b);
+a >>= __builtin_ctz(a);
+do {
+b >>= __builtin_ctz(b);
+if (a > b)
+swap(a, b);
+b -= a;
+} while (b);
+return a << shift;
+}
+
+void factorial(){
+    fact[0]=1;
+    for(ll i=1;i<MAXN+1;i++){
+        fact[i]=(fact[i-1]*i)%MODN;
+    }
+}
+
+ll exp(ll a, ll b , ll p)
+{
+    ll res = 1;
+    while (b > 0)
+    {
+        if (b & 1)
+            res = (res%p * a%p)%p ;
+        a = ((a%p) * (a%p))%p;
+        b >>= 1;
+    }
+    return res%p;
+}
+
+void sieve_of_eratosthenes(){
+    memset(is_prime,true,sizeof(is_prime));
+    is_prime[0] = is_prime[1] = false;
+    for (ll i = 2; i <= MAXN; i++) {
+            if (is_prime[i] && (long long)i * i <= MAXN) {
+                for (ll j = i * i; j <= MAXN; j += i){
+                        is_prime[j] = false;
+                }
+        }
+    }
+ 
+}
+
+void sieve()
+{
+    spf[1] = 1;
+    for (ll i = 2; i < MAXN; i++)
+ 
+        // marking smallest prime factor for every
+        // number to be itself.
+        spf[i] = i;
+ 
+    // separately marking spf for every even
+    // number as 2
+    for (ll i = 4; i < MAXN; i += 2)
+        spf[i] = 2;
+ 
+    for (ll i = 3; i * i < MAXN; i++) {
+        // checking if i is prime
+        if (spf[i] == i) {
+            // marking SPF for all numbers divisible by i
+            for (ll j = i * i; j < MAXN; j += i)
+ 
+                // marking spf[j] if it is not
+                // previously marked
+                if (spf[j] == j)
+                    spf[j] = i;
+        }
+    }
 }

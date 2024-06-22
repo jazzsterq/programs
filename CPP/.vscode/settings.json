@@ -40,7 +40,8 @@
         "unordered_set": "cpp",
         "valarray": "cpp",
         "bitset": "cpp",
-        "numbers": "cpp"
+        "numbers": "cpp",
+        "queue": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
