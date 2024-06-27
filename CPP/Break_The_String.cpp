@@ -12,14 +12,16 @@
 */
 #include <bits/stdc++.h>
 #pragma GCC optimize("O3,unroll-loops")
+#ifdef __x86_64__
 #pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
+#endif
 using namespace std;
 typedef long long ll;
-//#include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// using namespace __gnu_pbds;
-// typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
-// typedef tree<ll, null_type, less_equal<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_multiset;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
+typedef tree<ll, null_type, less_equal<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_multiset;
 #define pb push_back
 #define mp make_pair
 #define fi first
@@ -88,72 +90,58 @@ void sieve_of_eratosthenes( );
 void factorial();
 void build(ll ind,ll low,ll high);
 ll query( ll ind,ll low , ll high , ll l , ll r);
-
+vector<ll> computeZ(const string& s) {
+    ll n=s.size();
+   vector <ll> ans(n, 0);
+		ans[0]=0;
+		ll l = 0, r = 0;
+		for (ll i=1; i<n; i++){
+			if (i<r){
+				ans[i] = min(ans[i-l], r-i);
+			}
+			while (i+ans[i]<n && s[i+ans[i]]==s[ans[i]]){
+				ans[i]++;
+			}
+			if (i+ans[i]>r){
+				r = i+ans[i];
+				l = i;
+			}
+		}
+		return ans;
+}
 void solve()
 {
-     ll n,k;
-        cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
-        rep(i,n)
+    string s;
+    cin>>s;
+    ll n=s.length();
+    vll z=computeZ(s);
+    string s2=s;
+    reverse(all(s2));
+    vll z2=computeZ(s2);
+    vll ans2(n);
+    forf(i,1,n)
+    {
+        if(z2[i]>=i)
         {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
+            ans2[i+i-1]=1;
         }
-        ll oc =0;
-        bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
+    }
+    reverse(all(ans2));
+    ll count=0;
+    forf(i,1,n-1)
+    {
+        if(2*i<n&&z[i]>=i&&ans2[2*i])
         {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
-            for(auto y: x.second)
-            {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
-            }
-            // ce;
-            ll len = diff.size();
-            ll val = 0;
-            if(diff.size()%2)
-            {
-                ll val1=0;
-                vll prefix(len,0),suffix(len,0);
-                rep(i,len)
-                {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
-                }
-                forb(i,len-1,0)
-                {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
-                }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
-                val=INF;
-                for(int i=0;i<len;i+=2)
-                {
-                    val = min(val,( (i?prefix[i-1]:0)) + ((i+1<len)?suffix[i+1]:0));
-                }
-             
-            }
-            else
-            {
-                for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
-                }
-            }
-            ans+=val;
+            count++;
         }
-        if(fl)cout<<-1;
-        else{cout<<ans;}
-        ce;
-    
+    }
+    //vout(z);
+    //vout(ans2);
+    if(n%2==0){
+        if(s.substr(0,n/2)==s.substr(n/2,n/2))
+        count+=2;
+        }    
+    print(count);
     return;
 }
 
@@ -161,9 +149,9 @@ int main(){
 
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);
-ll t;
-    cin >> t;
-    while(t--){
+ll _;
+    cin >> _;
+    while(_--){
         solve();
     }
 

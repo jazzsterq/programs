@@ -78,7 +78,7 @@ const ll MAXN=100001;
 const ll MODN= 1e9 + 7;
 bool is_prime[MAXN+1];
 ll fact[MAXN+1];
-ll arr[200005];
+ll a[200005];
 ll spf[MAXN];
 ll seg[4*200005];
 void sieve();
@@ -91,69 +91,37 @@ ll query( ll ind,ll low , ll high , ll l , ll r);
 
 void solve()
 {
-     ll n,k;
-        cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
-        rep(i,n)
+    ll n;
+    cin>>n;
+    vll a(n);
+    vin(a);
+    vll value(n);
+    rep(i,n)value[i]=-1;
+    stack<ll> st;
+    rep(i,n)
+    {
+        while(!st.empty() && a[st.top()]<a[i]){st.pop();}
+        if(!st.empty())
         {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
+            value[i] =st.top();
         }
-        ll oc =0;
-        bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
+        st.push(i);
+    }
+    vll final(n);
+    rep(i,n)
+    {
+        if(value[i]==-1)
         {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
-            for(auto y: x.second)
-            {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
-            }
-            // ce;
-            ll len = diff.size();
-            ll val = 0;
-            if(diff.size()%2)
-            {
-                ll val1=0;
-                vll prefix(len,0),suffix(len,0);
-                rep(i,len)
-                {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
-                }
-                forb(i,len-1,0)
-                {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
-                }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
-                val=INF;
-                for(int i=0;i<len;i+=2)
-                {
-                    val = min(val,( (i?prefix[i-1]:0)) + ((i+1<len)?suffix[i+1]:0));
-                }
-             
-            }
-            else
-            {
-                for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
-                }
-            }
-            ans+=val;
+            final[i] = a[i]*(i+1);
+            final[i]++;
         }
-        if(fl)cout<<-1;
-        else{cout<<ans;}
-        ce;
-    
+        else 
+        {
+            final[i] =(i-value[i])*a[i];
+            final[i]+=final[value[i]];
+        }
+    }
+    vout(final);
     return;
 }
 
@@ -161,11 +129,7 @@ int main(){
 
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);
-ll t;
-    cin >> t;
-    while(t--){
         solve();
-    }
 
 return 0 ;
 }
@@ -174,7 +138,7 @@ void build(ll ind,ll low,ll high)
 {
     if(low==high)
     {
-        seg[ind]=arr[low];
+        seg[ind]=a[low];
         return;
     }
     ll mid = (low +high)/2;

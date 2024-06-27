@@ -91,69 +91,39 @@ ll query( ll ind,ll low , ll high , ll l , ll r);
 
 void solve()
 {
-     ll n,k;
-        cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
-        rep(i,n)
+    ll n,m;
+    cin>>n>>m;
+    ll a[n][m];
+    rep(i,n)
+    {
+        rep(j,m)cin>>a[i][j];
+    }
+    rep(i,n)
+    {
+        rep(j,m)
         {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
+            ll b=INT_MIN,c=INT_MIN,d=INT_MIN,e=INT_MIN;
+            if(i>0)
+            {
+                b=a[i-1][j];
+                if(a[i][j]<=b)continue;
+            }
+            if(j>0)
+            {
+                c=a[i][j-1];
+                 if(a[i][j]<=c)continue;
+            }
+            if(i<n-1){d=a[i+1][j]; if(a[i][j]<=d)continue;}
+            if(j<m-1){e=a[i][j+1]; if(a[i][j]<=e)continue;}
+            //cout<<b<<c<<d<<e;
+            //if(a[i][j]>b&&a[i][j]>c&&a[i][j]>d&&a[i][j]>e)
+            a[i][j]=(max(max(e,b),max(c,d)));
         }
-        ll oc =0;
-        bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
-        {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
-            for(auto y: x.second)
-            {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
-            }
-            // ce;
-            ll len = diff.size();
-            ll val = 0;
-            if(diff.size()%2)
-            {
-                ll val1=0;
-                vll prefix(len,0),suffix(len,0);
-                rep(i,len)
-                {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
-                }
-                forb(i,len-1,0)
-                {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
-                }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
-                val=INF;
-                for(int i=0;i<len;i+=2)
-                {
-                    val = min(val,( (i?prefix[i-1]:0)) + ((i+1<len)?suffix[i+1]:0));
-                }
-             
-            }
-            else
-            {
-                for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
-                }
-            }
-            ans+=val;
-        }
-        if(fl)cout<<-1;
-        else{cout<<ans;}
-        ce;
-    
+    }
+    rep(i,n)
+    {
+        rep(j,m)prints(a[i][j]);ce;
+    }
     return;
 }
 

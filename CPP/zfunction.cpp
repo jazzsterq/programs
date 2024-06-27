@@ -12,7 +12,9 @@
 */
 #include <bits/stdc++.h>
 #pragma GCC optimize("O3,unroll-loops")
+#ifdef __x86_64__
 #pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
+#endif
 using namespace std;
 typedef long long ll;
 //#include <ext/pb_ds/assoc_container.hpp>

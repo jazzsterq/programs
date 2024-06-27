@@ -78,7 +78,7 @@ const ll MAXN=100001;
 const ll MODN= 1e9 + 7;
 bool is_prime[MAXN+1];
 ll fact[MAXN+1];
-ll arr[200005];
+ll a[200005];
 ll spf[MAXN];
 ll seg[4*200005];
 void sieve();
@@ -93,48 +93,47 @@ void solve()
 {
      ll n,k;
         cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
+        vll a(n);
+        rep(i,n)cin>>a[i];
+        for(int i=0;i<n;i++){}
+        map<ll,map<ll,ll>> modulus;
         rep(i,n)
         {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
+            int count = ++modulus[a[i]%k][a[i]/k];
+            modulus[a[i]%k][a[i]/k] = count%2;
+            if(modulus[a[i]%k][a[i]/k]==0)modulus[a[i]%k].erase(a[i]/k);
         }
-        ll oc =0;
+        ll oops =0;
         bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
+        ll final  = 0;
+        for(auto x:modulus)
         {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
+            oops+= (x.second.size()%2);
+            if((oops && !(n%2)) ||  (oops>1 &&(n%2))){fl=1;break;}
+            vector<int> differe;
+
             for(auto y: x.second)
             {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
+                differe.push_back(y.first);
             }
-            // ce;
-            ll len = diff.size();
+
+            ll len = differe.size();
             ll val = 0;
-            if(diff.size()%2)
+            if(differe.size()%2)
             {
                 ll val1=0;
                 vll prefix(len,0),suffix(len,0);
                 rep(i,len)
                 {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
+                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ differe[i];
+                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ differe[i];
+                    else prefix[i]=( i?prefix[i-1]:0)-differe[i];
                 }
                 forb(i,len-1,0)
                 {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
+                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- differe[i];
+                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ differe[i];
                 }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
                 val=INF;
                 for(int i=0;i<len;i+=2)
                 {
@@ -145,13 +144,13 @@ void solve()
             else
             {
                 for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
+                    val+= (differe[i+1]-differe[i]);
                 }
             }
-            ans+=val;
+            final+=val;
         }
         if(fl)cout<<-1;
-        else{cout<<ans;}
+        else{cout<<final;}
         ce;
     
     return;
@@ -174,7 +173,7 @@ void build(ll ind,ll low,ll high)
 {
     if(low==high)
     {
-        seg[ind]=arr[low];
+        seg[ind]=a[low];
         return;
     }
     ll mid = (low +high)/2;

@@ -12,14 +12,16 @@
 */
 #include <bits/stdc++.h>
 #pragma GCC optimize("O3,unroll-loops")
+#ifdef __x86_64__
 #pragma GCC target("avx2,bmi,bmi2,popcnt,lzcnt")
+#endif
 using namespace std;
 typedef long long ll;
-//#include <ext/pb_ds/assoc_container.hpp>
-// #include <ext/pb_ds/tree_policy.hpp>
-// using namespace __gnu_pbds;
-// typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
-// typedef tree<ll, null_type, less_equal<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_multiset;
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_set;
+typedef tree<ll, null_type, less_equal<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_multiset;
 #define pb push_back
 #define mp make_pair
 #define fi first
@@ -78,7 +80,7 @@ const ll MAXN=100001;
 const ll MODN= 1e9 + 7;
 bool is_prime[MAXN+1];
 ll fact[MAXN+1];
-ll arr[200005];
+ll awq[200005];
 ll spf[MAXN];
 ll seg[4*200005];
 void sieve();
@@ -91,69 +93,39 @@ ll query( ll ind,ll low , ll high , ll l , ll r);
 
 void solve()
 {
-     ll n,k;
-        cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
-        rep(i,n)
+    ll n;
+    cin>>n;
+    vll awq(n);
+    rep(i,n)cin>>awq[i];
+    vector<vector<ll>> adj(n);
+    rep(i,n)
+    {
+        adj[i]=vector<ll> (0);
+    }
+    rep(i,n-1){
+        ll a,b;cin>>a>>b;
+        adj[a-1].pb(b-1);
+        adj[b-1].pb(a-1);
+    }
+    ll idx= min_element(all(awq))-awq.begin();
+    vll sortt;
+    function<void(int pos,int par)> dfs =[&](int pos, int par)->void{
+        for(auto x: adj[pos])
         {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
+            if(x==par)continue;
+            dfs(x,pos);
         }
-        ll oc =0;
-        bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
-        {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
-            for(auto y: x.second)
-            {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
-            }
-            // ce;
-            ll len = diff.size();
-            ll val = 0;
-            if(diff.size()%2)
-            {
-                ll val1=0;
-                vll prefix(len,0),suffix(len,0);
-                rep(i,len)
-                {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
-                }
-                forb(i,len-1,0)
-                {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
-                }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
-                val=INF;
-                for(int i=0;i<len;i+=2)
-                {
-                    val = min(val,( (i?prefix[i-1]:0)) + ((i+1<len)?suffix[i+1]:0));
-                }
-             
-            }
-            else
-            {
-                for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
-                }
-            }
-            ans+=val;
-        }
-        if(fl)cout<<-1;
-        else{cout<<ans;}
-        ce;
-    
+        sortt.pb(pos);
+    };
+    reverse(all(sortt));
+    dfs(idx,-1);
+    cout<<n-1;ce;
+    forf(i,0,n-1)
+    {
+        cout<<sortt[i]+1<<" ";
+    }
+    ce;
+
     return;
 }
 
@@ -174,7 +146,7 @@ void build(ll ind,ll low,ll high)
 {
     if(low==high)
     {
-        seg[ind]=arr[low];
+        seg[ind]=awq[low];
         return;
     }
     ll mid = (low +high)/2;

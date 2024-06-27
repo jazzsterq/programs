@@ -47,16 +47,6 @@ typedef tree<ll, null_type, less_equal<ll>, rb_tree_tag, tree_order_statistics_n
 #define rep(i, n) for (ll i = 0; i < n; i++)
 #define forf(i, a, b) for (ll i = a; i < b; i++)
 #define forb(i, s, e) for (ll i = s; i >= e; i--)
-
-#ifndef ONLINE_JUDGE
-#include "debug.cpp"
-#define debug(x...)               \
-    cerr << "[" << #x << "] = ["; \
-    _print(x)
-#else
-#define debug(x...)
-#endif
-
 template<typename R>
 void vin(vector<R> &a)
 {
@@ -93,34 +83,75 @@ ll query( ll ind,ll low , ll high , ll l , ll r);
 
 void solve()
 {
-     ll n;
+    ll n;
     cin>>n;
-    vll l(n),r(n),c(n);
-    rep(i,n)
-    cin>>l[i];
-    rep(i,n)
+    vll a(n);vin(a);
+    vector<vector<int> > adj(n);
+    rep(i,n-1)
     {
-        cin>>r[i];
+        ll a,b;
+        cin>>a>>b;
+        a--;b--;
+        if(a>b)swap(a,b);
+        adj[a].pb(b);
     }
-    rep(i,n)
-    cin>>c[i];
-    sort(all(l));
-    sort(all(c));
-    sort(all(r));
-   //vout(l);vout(r);vout(c);
-    vll diff;
-    rep(i,n)
-    {
-        diff.pb(r[i]-l[i]);
-    }
-    sort(all(diff),greater <int>());
-    ll ans=0;
-    rep(i,n)
-    {
-        ans+=diff[i]*c[i];
-    }
+    multiset<ll,greater<ll>> lo;
+    multiset<ll>hi;
+    ll ans=a[0];
+    lo.insert(a[0]);
+    function <void(int)> dfs=[&] (int node){
+        for(auto i: adj[node])
+        {
+            if(*lo.begin()>a[i])
+            {
+                lo.insert(a[i]);
+                if(lo.size()>hi.size()+1)
+                {
+                    hi.insert(*lo.begin());
+                    lo.erase(lo.find(*lo.begin()));
+                }
+            }
+            else
+            {
+                hi.insert(a[i]);
+                if(hi.size()>lo.size())
+                {
+                    lo.insert(*hi.begin());
+                    hi.erase(hi.find(*hi.begin()));
+                }
+            }
+            int n1=lo.size();int n2=hi.size();
+            if((n1+n2)%2!=0){
+                //cout<<*hi.begin()<<" ";
+                //debug(lo);
+                //debug(hi);
+                if(lo.size()>hi.size())
+                ans+=(*lo.begin());
+                else ans+=(*hi.begin());
+            }
+            dfs(i);
+            if(hi.count(a[i]))
+            {
+                hi.erase(hi.find(a[i]));
+            }
+            else
+            {  
+                lo.erase(lo.find(a[i]));
+            }
+             if(lo.size()>hi.size()+1)
+                {
+                    hi.insert(*lo.begin());
+                    lo.erase(lo.find(*lo.begin()));
+                }
+                if(hi.size()>lo.size())
+                {
+                    lo.insert(*hi.begin());
+                    hi.erase(hi.find(*hi.begin()));
+                }
+        }
+    };
+    dfs(0);
     print(ans);
-    return;
     return;
 }
 
@@ -135,106 +166,4 @@ ll t;
     }
 
 return 0 ;
-}
-
-void build(ll ind,ll low,ll high)
-{
-    if(low==high)
-    {
-        seg[ind]=arr[low];
-        return;
-    }
-    ll mid = (low +high)/2;
-    build(2*ind+1,low,mid);
-    build(2*ind+2,mid+1,high);
-    seg[ind]=seg[2*ind+1]+seg[2*ind+2];
-}
-ll query(ll ind,ll low , ll high , ll l , ll r)
-{
-    if(low>=l&&high<=r)
-    {
-        return seg[ind];
-    }
-    if(high<l||low>r)
-    {
-        return 0;
-    }
-    ll mid = (low + high)/2;
-    ll left= query(2*ind+1,low,mid,l,r);
-    ll right= query(2*ind+2,mid+1,high,l,r);
-    return(left+right);
-
-}
-
-ll gcd(ll a, ll b) {if (!a || !b)return a | b;
-unsigned shift = __builtin_ctz(a | b);
-a >>= __builtin_ctz(a);
-do {
-b >>= __builtin_ctz(b);
-if (a > b)
-swap(a, b);
-b -= a;
-} while (b);
-return a << shift;
-}
-
-void factorial(){
-    fact[0]=1;
-    for(ll i=1;i<MAXN+1;i++){
-        fact[i]=(fact[i-1]*i)%MODN;
-    }
-}
-
-ll exp(ll a, ll b , ll p)
-{
-    ll res = 1;
-    while (b > 0)
-    {
-        if (b & 1)
-            res = (res%p * a%p)%p ;
-        a = ((a%p) * (a%p))%p;
-        b >>= 1;
-    }
-    return res%p;
-}
-
-void sieve_of_eratosthenes(){
-    memset(is_prime,true,sizeof(is_prime));
-    is_prime[0] = is_prime[1] = false;
-    for (ll i = 2; i <= MAXN; i++) {
-            if (is_prime[i] && (long long)i * i <= MAXN) {
-                for (ll j = i * i; j <= MAXN; j += i){
-                        is_prime[j] = false;
-                }
-        }
-    }
- 
-}
-
-void sieve()
-{
-    spf[1] = 1;
-    for (ll i = 2; i < MAXN; i++)
- 
-        // marking smallest prime factor for every
-        // number to be itself.
-        spf[i] = i;
- 
-    // separately marking spf for every even
-    // number as 2
-    for (ll i = 4; i < MAXN; i += 2)
-        spf[i] = 2;
- 
-    for (ll i = 3; i * i < MAXN; i++) {
-        // checking if i is prime
-        if (spf[i] == i) {
-            // marking SPF for all numbers divisible by i
-            for (ll j = i * i; j < MAXN; j += i)
- 
-                // marking spf[j] if it is not
-                // previously marked
-                if (spf[j] == j)
-                    spf[j] = i;
-        }
-    }
 }

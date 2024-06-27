@@ -91,68 +91,41 @@ ll query( ll ind,ll low , ll high , ll l , ll r);
 
 void solve()
 {
-     ll n,k;
-        cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
-        rep(i,n)
-        {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
-        }
-        ll oc =0;
-        bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
-        {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
-            for(auto y: x.second)
-            {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
-            }
-            // ce;
-            ll len = diff.size();
-            ll val = 0;
-            if(diff.size()%2)
-            {
-                ll val1=0;
-                vll prefix(len,0),suffix(len,0);
-                rep(i,len)
-                {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
-                }
-                forb(i,len-1,0)
-                {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
-                }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
-                val=INF;
-                for(int i=0;i<len;i+=2)
-                {
-                    val = min(val,( (i?prefix[i-1]:0)) + ((i+1<len)?suffix[i+1]:0));
-                }
-             
-            }
-            else
-            {
-                for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
-                }
-            }
-            ans+=val;
-        }
-        if(fl)cout<<-1;
-        else{cout<<ans;}
-        ce;
+    ll l,a,k,c;
+    cin>>l>>a>>k>>c;
+    vll cuts;
+    forf(i,1,c+1){
+        ll newcut=((a*i)%(l-1))+1;
+        cuts.pb(newcut); 
+        
+    }
+    //sort(all(cuts));
+    vout(cuts);
+    // ll start=0,end=l+1;
+    // function <int(int)> check = [&](int mid){
+    //     ll lastcut=0;
+    //     ll finlen=0;
+    //     forf(i,0,c)
+    //     {
+    //         ll newcut=lastcut+cuts[i];
+    //         ll tlen=newcut-lastcut;
+    //         lastcut=newcut;
+    //         finlen=max(tlen,finlen);
+    //     }
+    //     ll tlen=l-lastcut;
+    //     finlen=max(tlen,finlen);
+    //     if(finlen>mid)return 0;
+    //     if(finlen<=mid)return 1;
+    //     return 0;
+    // };
+    // while(start+1<end)
+    // {
+    //     ll mid=(start+end)/2;
+    //     if(check(mid))end=mid;
+    //     else start=mid;
+    // }
+    // //cout<<check(4);
+    // prints(end);print(cuts[0]);
     
     return;
 }

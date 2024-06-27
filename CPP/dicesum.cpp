@@ -88,72 +88,45 @@ void sieve_of_eratosthenes( );
 void factorial();
 void build(ll ind,ll low,ll high);
 ll query( ll ind,ll low , ll high , ll l , ll r);
-
+int findDiceSum(int A, int B, int C) {
+     int MODN=1e9+7;
+    vector<vector<int>> dp(A+1,vector<int > (C+1));
+    vector<vector<int>> pre(A+1,vector<int > (C+1));
+    int ans=0;
+    dp[0][0]=1;
+    pre[0][0]=1;
+    for(int j=1;j<=C;j++)
+    {
+        pre[0][j]=(pre[0][j-1]+dp[0][j])%MODN;
+    }
+    for(int i=1;i<=A;i++)
+    {
+        for(int j=1;j<=C;j++)
+        {
+            if(j-B-1>=0)
+            dp[i][j]=(pre[i-1][j-1]-pre[i-1][j-B-1]+MODN)%MODN;
+            else dp[i][j]=pre[i-1][j-1];
+            // for(int k=1;k<=B;k++)
+            // {
+            //     if(j-k>=0)
+            //     (dp[i][j]+=dp[i-1][j-k]%MODN)%=MODN;
+            // }
+            
+        }
+        for(int j=1;j<=C;j++)
+        {
+            (pre[i][j]=(pre[i][j-1]+dp[i][j])%MODN)%=MODN;
+        }
+    }
+   // debug(dp);
+   // debug(pre);
+    return dp[A][C]%MODN;
+}
 void solve()
 {
-     ll n,k;
-        cin>>n>>k;
-        vll arr(n);
-        rep(i,n)cin>>arr[i];
-        map<ll,map<ll,ll>> mods;
-        rep(i,n)
-        {
-            int cnt = ++mods[arr[i]%k][arr[i]/k];
-            mods[arr[i]%k][arr[i]/k] = cnt%2;
-            if(mods[arr[i]%k][arr[i]/k]==0)mods[arr[i]%k].erase(arr[i]/k);
-        }
-        ll oc =0;
-        bool fl =0;
-        ll ans  = 0;
-        for(auto x:mods)
-        {
-            oc+= (x.second.size()%2);
-            if((oc && !(n%2)) ||  (oc>1 &&(n%2))){fl=1;break;}
-            vector<int> diff;
-            // cout<<x.first<<"->";
-            for(auto y: x.second)
-            {
-                // cout<<y.first<<" ";
-                diff.push_back(y.first);
-            }
-            // ce;
-            ll len = diff.size();
-            ll val = 0;
-            if(diff.size()%2)
-            {
-                ll val1=0;
-                vll prefix(len,0),suffix(len,0);
-                rep(i,len)
-                {
-                    if((i%2))prefix[i] = ( i?prefix[i-1]:0)+ diff[i];
-                    else prefix[i]=( i?prefix[i-1]:0)-diff[i];
-                }
-                forb(i,len-1,0)
-                {
-                    if((i%2))suffix[i] = ( (i+1<len)?suffix[i+1]:0)- diff[i];
-                    else suffix[i]=( (i+1<len)?suffix[i+1]:0)+ diff[i];
-                }
-                // for(auto p:prefix)cout<<p<<" ";ce;
-                // for(auto q:suffix)cout<<q<<" "; ce;
-                val=INF;
-                for(int i=0;i<len;i+=2)
-                {
-                    val = min(val,( (i?prefix[i-1]:0)) + ((i+1<len)?suffix[i+1]:0));
-                }
-             
-            }
-            else
-            {
-                for(int i=0;i<len;i+=2){
-                    val+= (diff[i+1]-diff[i]);
-                }
-            }
-            ans+=val;
-        }
-        if(fl)cout<<-1;
-        else{cout<<ans;}
-        ce;
-    
+    int a,b,c;cin>>a>>b>>c;
+    int ans=findDiceSum(a,b,c);
+    cout<<ans;
     return;
 }
 
@@ -161,11 +134,7 @@ int main(){
 
 ios_base::sync_with_stdio(false);
 cin.tie(NULL); cout.tie(NULL);
-ll t;
-    cin >> t;
-    while(t--){
         solve();
-    }
 
 return 0 ;
 }
