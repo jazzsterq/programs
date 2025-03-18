@@ -42,7 +42,8 @@
         "bitset": "cpp",
         "numbers": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "*.tcc": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

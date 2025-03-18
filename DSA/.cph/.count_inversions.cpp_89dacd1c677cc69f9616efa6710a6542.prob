@@ -1,0 +1,1 @@
+{"name":"Local: count_inversions","url":"/Users/user/Desktop/Programs/DSA/count_inversions.cpp","tests":[{"id":1721638971705,"input":"5 5 4 3 2 1","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/user/Desktop/Programs/DSA/count_inversions.cpp","group":"local","local":true}

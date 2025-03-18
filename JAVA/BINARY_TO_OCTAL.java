@@ -1,7 +1,7 @@
 import java.util.*;
 class BINARY_TO_OCTAL
 {
-    public static void main()
+    public static void main(String args[])
     {   int dig,sum=0,base=1,dig1,oct=0;
         Scanner sa=new Scanner(System.in);
         System.out.println("ENTER A OCTAL NUMBER");

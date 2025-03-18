@@ -50,31 +50,16 @@ void solve()
         cin>>a[i];
         summ+=a[i];
     }
-    vll sum(n),sum2(n);
     sort(all(a));
-    sum[0]=a[0];
-    sum2[n-1]=a[n-1];
-    ll f=0,l=n-1;
-    while(f+1<l)
+    ll sum2=summ-a[n-1];
+    if(sum2>=a[n-1])
     {
-        if(sum[f]<sum2[l])
-        {
-            f++;
-            sum[f]=sum[f-1]+a[f];
-        }
-        else
-        {
-            l--;
-            sum2[l]=sum2[l+1]+a[l];
-        }
+        print(summ);
     }
-    if(l!=n-1)
+    else
     {
-        cout<<summ;return;
+        print(a[n-1]*2);
     }
-    ans1=sum2[l]+a[n-1];
-    ans2=summ;
-    cout<<max(ans1,ans2);
     return;
 }
 

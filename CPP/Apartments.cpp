@@ -1,62 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-#define be begin()
-#define en end()
-#define pb push_back
-#define pyes cout << "YES\n"
-#define pno cout << "NO\n"
-#define ce cout << '\n'
-#define endl '\n'
-#define rev(v) reverse(v.begin(), v.end())
-#define srt(v) sort(v.begin(), v.end())
-#define all(v) v.begin(), v.end()
-#define mnv(v) *min_element(v.begin(), v.end())
-#define mxv(v) *max_element(v.begin(), v.end())
-#define fi first
-#define se second
-#define deb(x) cout << #x << "=" << x << endl
-#define vll vector<ll>
-#define vp vector<pair<long long, long long> >
-#define trav(v) for (auto it = v.begin(); it != v.end(); it++)
-#define rep(i, n) for (ll i = 0; i < n; i++)
-#define forf(i, a, b) for (ll i = a; i < b; i++)
-#define forb(i, s, e) for (ll i = s; i >= e; i--)
-
-void solve()
+int main()
 {
-    ll n,m,k;
+    int n,m,k;
     cin>>n>>m>>k;
-    ll a[n],b[m];
-    rep(i,n)cin>>a[i];
-    rep(i,m)
-    cin>>b[i];
-    sort(a,a+n);sort(b,b+m);
-    ll pth=0;ll count=0;
-    rep(i,n)
+    vector<int> a(n),b(m);
+    for(int i=0;i<n;i++)
     {
-        if(b[pth]<a[i]-k)
-        {
-            pth++;i--;
+        cin>>a[i];
+    }
+    for(int i=0;i<m;i++)cin>>b[i];
+    sort(a.begin(),a.end());sort(b.begin(),b.end());
+    int count=0;
+    int ptr1=0,ptr2=0;
+    while(ptr1<n&&ptr2<m)
+    {
+        if(abs(a[ptr1]-b[ptr2])<=k){
+            count++;
+            ptr1++;ptr2++;
         }
-        else if(b[pth]>=(a[i]-k)&&b[pth]<=(a[i]+k))
+        else if(a[ptr1]>b[ptr2])
         {
-            pth++;count++;
+            ptr2++;
         }
-        if(pth>=m)
-        break;
+        else ptr1++;
     }
     cout<<count;
-    return;
-}
-
-int main(){
-
-ios_base::sync_with_stdio(false);
-cin.tie(NULL); cout.tie(NULL);
-
-        solve();
-
-
-return 0 ;
 }

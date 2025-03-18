@@ -45,7 +45,7 @@ void factorial();
 void solve()
 {
     ll n;cin>>n;ll k;cin>>k;
-    indexed_set<ll> s;
+    indexed_set s;
     forf(i,1,n+1)
     {
         s.insert(i);
@@ -55,20 +55,15 @@ void solve()
         cout<<1;
         return;
     }
-    auto it=s.begin();
-    ll ko=k;
+    ll ko=k%s.size();
+    
     while(s.size()>1)
     {
-        k=(ko%s.size());
-        val=s.find_by_order(k);
-        // if(it==s.end())
-        // {
-        //     it=s.begin();
-        // }
-       // ll val=*it;
+        int val=*s.find_by_order(ko);
         cout<<val<<" ";
-        //it++;
-        s.erase(s.order_of_key(val)); 
+        s.erase(val);
+        (ko+=k)%=s.size();
+    
     }
     cout<<*s.begin();
     return;
